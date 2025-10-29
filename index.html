@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>首页</title>
+    <meta name="theme-color" content="#111111" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      body {
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        background: url("images/web_bg.png") no-repeat top center;
+        background-size: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .menu {
+        position: absolute;
+        right: 2rem;
+        top: 0.15rem;
+        font-size: 0.2rem;
+        color: #fff;
+        display: flex;
+      }
+      .menu a {
+        display: inline-block;
+        margin: 0 0.1rem;
+        line-height: 0.3rem;
+        text-decoration: none;
+        color: #fff;
+      }
+      .menu a img {
+        width: 0.34rem;
+      }
+
+      button {
+        -webkit-appearance: none; /* 清除iOS默认样式 */
+        appearance: none;
+        border: none;
+        background: none;
+        cursor: pointer;
+      }
+      .video-part {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 4.5rem; /* 从3rem增加到4.5rem，调大视频区域 */
+        overflow: hidden;
+        z-index: 1;
+      }
+      .play-masker {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 10;
+      }
+      #btnPlay {
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-bottom: 40px solid #fff;
+        transform: rotate(90deg);
+      }
+
+      .mr40 {
+        margin-right: 40px !important;
+      }
+      .flex-container {
+        position: absolute;
+        left: 25%; /* 改为50%使容器完全居中 */
+        bottom: 10vh;
+        transform: translateX(-50%);
+      }
+      /* 全屏按钮样式 */
+      .fullscreen-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+      }
+      .fullscreen-btn:hover {
+        background: rgba(0, 0, 0, 0.9);
+        border-color: #fff;
+        transform: scale(1.05);
+      }
+      /* 全屏图标 - 使用简单的四个角样式 */
+      .fullscreen-btn::before {
+        content: "";
+        width: 18px;
+        height: 18px;
+        border: 2px solid #fff;
+        border-radius: 2px;
+        position: relative;
+      }
+      .fullscreen-btn::after {
+        content: "";
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border: 2px solid #fff;
+        border-radius: 1px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .isHidden {
+        display: none;
+      }
+      #btnMenu {
+        display: none;
+      }
+      @media (max-width: 767px) {
+        body {
+          height: 100vh;
+          margin: 0;
+          padding: 0;
+          background: url("images/index_bg3.png") no-repeat;
+          background-size: cover;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          box-sizing: border-box;
+        }
+        .menu {
+          background: #000;
+          position: absolute;
+          top: 0.6rem;
+          right: 0;
+          font-size: 0.2rem;
+          color: #fff;
+          z-index: 111;
+          width: 0.8rem;
+          display: inline-block;
+          box-sizing: border-box;
+          text-align: center;
+        }
+        .menu a {
+          margin: 0;
+          line-height: 0.3rem;
+          text-decoration: none;
+          color: #fff;
+          padding: 0.1rem;
+        }
+        .menu a img {
+          width: 0.34rem;
+        }
+        #btnMenu {
+          position: absolute;
+          width: 0.3rem;
+          line-height: 0;
+          top: 3vh;
+          right: 0.3rem;
+          display: block;
+        }
+        #btnMenu img {
+          width: 100%;
+        }
+        .hidden {
+          display: none;
+        }
+        .flex-container {
+          width: 100%;
+          left: 0;
+          transform: translateX(0%);
+        }
+        .video-part {
+          width: auto;
+        }
+        .iframe-style {
+          width: 90%;
+        }
+        .fullscreen-btn {
+          right: 40px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="btnMenu">
+      <img src="images/menu.png" id="imgMenu" alt="" />
+    </div>
+    <!-- 顶部导航菜单区域 -->
+    <div class="menu hidden" id="btnSubMenu">
+      <!-- 首页链接 -->
+      <a href="/">首页</a>
+      <!-- 招聘页面链接 - 修改此处的href来更改招聘页面地址 -->
+      <a
+        href="https://www.zhipin.com/companys/08de2fe2f0cdd9a70nZ-3Ny0FFE~.html"
+        target="_blank"
+        >招聘</a
+      >
+      <!-- 微信二维码/公众号链接 - 修改此处的href来添加微信链接 -->
+      <a href=""><img src="images/wx.png" alt="微信" /></a>
+      <!-- B站链接 - 修改此处的href来添加B站链接 -->
+      <a
+        href="https://space.bilibili.com/3546977128155332?spm_id_from=333.33.0.0"
+        ><img src="images/b.png" alt="B站"
+      /></a>
+      <!-- 微博链接 - 修改此处的href来添加微博链接 -->
+      <a href="https://weibo.com/u/4065468154"
+        ><img src="images/wb.png" alt="微博"
+      /></a>
+      <!-- 抖音链接 - 修改此处的href来添加抖音链接 -->
+      <a href=""><img src="images/dy.png" alt="抖音" /></a>
+    </div>
+    <!-- 视频播放区域 -->
+    <div class="flex-container">
+      <div class="video-part">
+        <!-- 视频播放遮罩层，点击后播放视频 -->
+        <div class="play-masker" id="playMasker">
+          <!-- 播放按钮（三角形图标） -->
+          <div id="btnPlay"></div>
+        </div>
+        <!-- 全屏按钮 -->
+        <div class="fullscreen-btn" id="fullscreenBtn" title="全屏播放"></div>
+        <!-- 外部平台视频：使用 B站播放器 iframe 嵌入（注意：<video> 不能播放网页地址） -->
+        <!-- 修改 src 为你的 B站播放器地址，例如：
+             https://player.bilibili.com/player.html?bvid=BV11Bx7z6Epu&page=1&autoplay=1
+             可保留 isOutside=true/cid 等参数 -->
+        <iframe
+          id="myVedio"
+          src="https://player.bilibili.com/player.html?isOutside=true&aid=115450583188490&bvid=BV1BLyzBDE7y&cid=33447414941&p=1&autoplay=1"
+          width="100%"
+          class="iframe-style"
+          style="aspect-ratio: 16/9; height: auto"
+          frameborder="0"
+          allow="autoplay; fullscreen"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+    <!-- JavaScript代码区域 -->
+    <script>
+      // 获取页面元素
+      const playMasker = document.getElementById("playMasker"); // 播放遮罩层
+      const btnPlay = document.getElementById("btnPlay"); // 播放按钮
+      const myVedio = document.getElementById("myVedio"); // 视频元素
+      const fullscreenBtn = document.getElementById("fullscreenBtn"); // 全屏按钮
+      const btnMenu = document.getElementById("btnMenu");
+      const btnSubMenu = document.getElementById("btnSubMenu");
+      const imgMenu = document.getElementById("imgMenu");
+
+      btnMenu.addEventListener("click", () => {
+        if (btnSubMenu.classList.contains("hidden")) {
+          imgMenu.src = "images/close.png";
+          btnSubMenu.classList.remove("hidden");
+        } else {
+          imgMenu.src = "images/menu.png";
+          btnSubMenu.classList.add("hidden");
+        }
+      });
+      // 页面加载完成后隐藏播放按钮遮罩层（因为视频会自动播放）
+      window.addEventListener("load", () => {
+        playMasker.classList.add("isHidden"); // 隐藏播放按钮遮罩层
+      });
+
+      // 点击播放按钮时仅隐藏遮罩层（iframe 无法通过 JS 调 play）
+      btnPlay.addEventListener("click", () => {
+        playMasker.classList.add("isHidden");
+      });
+
+      // 使用 iframe 播放器，无 play/pause 事件可监听，这里不再绑定
+
+      // 全屏功能
+      fullscreenBtn.addEventListener("click", () => {
+        if (myVedio.requestFullscreen) {
+          myVedio.requestFullscreen();
+        } else if (myVedio.webkitRequestFullscreen) {
+          myVedio.webkitRequestFullscreen(); // Safari
+        } else if (myVedio.msRequestFullscreen) {
+          myVedio.msRequestFullscreen(); // IE/Edge
+        } else if (myVedio.mozRequestFullScreen) {
+          myVedio.mozRequestFullScreen(); // Firefox
+        }
+      });
+
+      // 监听全屏状态变化，更新按钮样式
+      document.addEventListener("fullscreenchange", updateFullscreenButton);
+      document.addEventListener(
+        "webkitfullscreenchange",
+        updateFullscreenButton
+      );
+      document.addEventListener("mozfullscreenchange", updateFullscreenButton);
+      document.addEventListener("MSFullscreenChange", updateFullscreenButton);
+
+      function updateFullscreenButton() {
+        if (
+          document.fullscreenElement ||
+          document.webkitFullscreenElement ||
+          document.mozFullScreenElement ||
+          document.msFullscreenElement
+        ) {
+          // 在全屏模式中
+          fullscreenBtn.style.display = "none"; // 全屏时隐藏全屏按钮
+        } else {
+          // 退出全屏模式
+          fullscreenBtn.style.display = "flex"; // 显示全屏按钮
+        }
+      }
+    </script>
+  </body>
+</html>
